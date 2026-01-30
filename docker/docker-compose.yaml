@@ -1,0 +1,47 @@
+services:
+  subscription-app:
+    container_name: subscription_app
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    hostname: localhost
+    ports: [ '5005:5005' ]
+    restart: unless-stopped
+    depends_on:
+      subscription-postgres:
+        condition: service_healthy
+    volumes:
+      - '..:/go/src'
+    working_dir: /go/src
+    networks:
+      subscription-network: { ipv4_address: 100.96.10.2 }
+
+  subscription-postgres:
+    container_name: subscription_postgres
+    image: postgres:latest
+    hostname: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: user
+      POSTGRES_DB: subscription
+    ports: [ '5432:5432' ]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      retries: 5
+      start_period: 15s
+      timeout: 10s
+    volumes:
+      - 'postgres-data:/var/lib/postgres'
+    networks:
+      subscription-network: { ipv4_address: 100.96.10.3 }
+
+networks:
+  subscription-network:
+    driver: bridge
+    ipam:
+      config: [ { subnet: 100.96.10.0/24 } ]
+
+volumes:
+  postgres-data:
