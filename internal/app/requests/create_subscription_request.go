@@ -11,11 +11,11 @@ import (
 )
 
 type CreateSubscriptionRequest struct {
-	ServiceName string `json:"service_name" validate:"required,alpha"`
-	Price       int    `json:"price" validate:"required,number,gt=0"`
-	UserUUID    string `json:"user_id" validate:"required,uuid"`
-	StartDate   string `json:"start_date" validate:"required,datetime=01-2006"`
-	EndDate     string `json:"end_date" validate:"omitempty,datetime=01-2006"`
+	ServiceName string `json:"service_name" validate:"required,alpha" example:"YandexPlus"`
+	Price       int    `json:"price" validate:"required,number,gt=0" example:"325"`
+	UserUUID    string `json:"user_id" validate:"required,uuid" example:"550e8400-e29b-41d4-a716-446655440000"`
+	StartDate   string `json:"start_date" validate:"required,datetime=01-2006" example:"01-2026"`
+	EndDate     string `json:"end_date" validate:"omitempty,datetime=01-2006" example:"12-2026"`
 }
 
 func (r *CreateSubscriptionRequest) ValidationSubscriptionError(errs validator.ValidationErrors) responses.Response {

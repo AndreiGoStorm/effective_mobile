@@ -136,7 +136,7 @@ func (api *SubscriptionController) CreateSubscription(c *fiber.Ctx) (err error) 
 // @Failure      400  {object}  responses.Response
 // @Failure      404  {object}  responses.Response
 // @Failure      422  {object}  responses.Response
-// @Router        /api/v1/subscriptions [put]
+// @Router        /api/v1/subscriptions/{id} [put]
 func (api *SubscriptionController) UpdateSubscription(c *fiber.Ctx) (err error) {
 	usr := new(requests.UpdateSubscriptionRequest)
 	if err := c.BodyParser(usr); err != nil {
@@ -181,7 +181,7 @@ func (api *SubscriptionController) UpdateSubscription(c *fiber.Ctx) (err error) 
 // @Success      204
 // @Failure      400  {object}  responses.Response
 // @Failure      404  {object}  responses.Response
-// @Router        /api/v1/subscriptions [delete]
+// @Router        /api/v1/subscriptions/{id} [delete]
 func (api *SubscriptionController) DeleteSubscription(c *fiber.Ctx) (err error) {
 	id, err := c.ParamsInt("id")
 	if err != nil {

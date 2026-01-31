@@ -11,10 +11,10 @@ import (
 )
 
 type UpdateSubscriptionRequest struct {
-	ServiceName string `json:"service_name" validate:"required,alpha"`
-	Price       int    `json:"price" validate:"required,number,gt=0"`
-	StartDate   string `json:"start_date" validate:"required,datetime=01-2006"`
-	EndDate     string `json:"end_date" validate:"omitempty,datetime=01-2006"`
+	ServiceName string `json:"service_name" validate:"required,alpha" example:"YandexPlus"`
+	Price       int    `json:"price" validate:"required,number,gt=0"  example:"400"`
+	StartDate   string `json:"start_date" validate:"required,datetime=01-2006" example:"02-2026"`
+	EndDate     string `json:"end_date" validate:"omitempty,datetime=01-2006" example:"04-2026"`
 }
 
 func (r *UpdateSubscriptionRequest) ValidationSubscriptionError(errs validator.ValidationErrors) responses.Response {
