@@ -27,7 +27,7 @@ func main() {
 	log := logger.New(&cfg.Logger)
 
 	log.Info("starting application",
-		slog.String("name", cfg.App.Name), slog.String("version", cfg.App.Version))
+		slog.String("name", cfg.Name), slog.String("version", cfg.Version))
 
 	ctx := context.Background()
 	store := storage.NewStorage(cfg.Database)

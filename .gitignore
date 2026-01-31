@@ -25,4 +25,5 @@ Thumbs.db
 .vscode/
 *.bak
 
-cmd/application/docs
+cmd/application/docs/*
+!cmd/application/docs/placeholder.go

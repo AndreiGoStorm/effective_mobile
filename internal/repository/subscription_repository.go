@@ -32,13 +32,15 @@ func (sr *SubscriptionRepository) GetSubscriptionByID(ID int64) (*models.Subscri
 		updated_at
 	FROM subscriptions WHERE id = $1`
 
-	stmp, err := sr.db.Prepare(query)
+	stmt, err := sr.db.Prepare(query)
 	if err != nil {
 		return nil, fmt.Errorf("%s: prepare: %w", op, err)
 	}
-	defer stmp.Close()
+	defer func(stmt *sql.Stmt) {
+		_ = stmt.Close()
+	}(stmt)
 
-	row := stmp.QueryRowContext(sr.ctx, ID)
+	row := stmt.QueryRowContext(sr.ctx, ID)
 
 	sub := &models.Subscription{}
 	err = row.Scan(
@@ -69,15 +71,16 @@ func (sr *SubscriptionRepository) Create(sub *models.Subscription) (id int64, er
 		end_date
 	) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 
-	stmp, err := sr.db.PrepareContext(sr.ctx, query)
+	stmt, err := sr.db.PrepareContext(sr.ctx, query)
 	if err != nil {
 		return 0, fmt.Errorf("%s: prepare context: %w", op, err)
 	}
-
-	defer stmp.Close()
+	defer func(stmt *sql.Stmt) {
+		_ = stmt.Close()
+	}(stmt)
 
 	var lastInsertID int64
-	err = stmp.QueryRowContext(sr.ctx,
+	err = stmt.QueryRowContext(sr.ctx,
 		sub.ServiceName,
 		sub.Price,
 		sub.UserUUID,
@@ -108,7 +111,9 @@ func (sr *SubscriptionRepository) Update(sub *models.Subscription) error {
 	if err != nil {
 		return fmt.Errorf("%s: Prepare: %w", op, err)
 	}
-	defer stmt.Close()
+	defer func(stmt *sql.Stmt) {
+		_ = stmt.Close()
+	}(stmt)
 
 	result, err := stmt.Exec(
 		sub.ServiceName,
@@ -138,9 +143,11 @@ func (sr *SubscriptionRepository) Delete(ID int64) error {
 
 	stmt, err := sr.db.Prepare(`delete from subscriptions where id = $1`)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s: Prepare: %w", op, err)
 	}
-	defer stmt.Close()
+	defer func(stmt *sql.Stmt) {
+		_ = stmt.Close()
+	}(stmt)
 
 	result, err := stmt.Exec(ID)
 	if err != nil {
@@ -181,7 +188,9 @@ func (sr *SubscriptionRepository) GetSubscriptions(
 	if err != nil {
 		return nil, fmt.Errorf("%s: failed query context: %w", op, err)
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		_ = rows.Close()
+	}(rows)
 
 	for rows.Next() {
 		sub := &models.Subscription{}

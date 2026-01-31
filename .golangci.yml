@@ -2,9 +2,14 @@ version: 2
 
 run:
   timeout: 5m
+  skip-dirs:
+    - cmd/application/docs
 
 linters:
   disable-all: true
   enable:
     - govet
+    - errcheck
     - staticcheck
+    - unused
+
